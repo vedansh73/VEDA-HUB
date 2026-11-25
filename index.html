@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VEDA HUB</title>
+  <style>
+    :root {
+      --bg: #050711;
+      --card: rgba(14, 20, 42, 0.84);
+      --border: rgba(124, 58, 237, 0.35);
+      --primary: #7c3aed;
+      --primary-2: #6d28d9;
+      --accent: #00f2fe;
+      --accent-soft: rgba(0, 242, 254, 0.22);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --danger: #ef4444;
+      --success: #10b981;
+      --discord: #5865f2;
+      --yt: #ff0000;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ANIMATED CYBER BACKGROUND */
+    .bg-stage {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 0%, rgba(124, 58, 237, 0.16), transparent 60%), var(--bg);
+    }
+
+    .bg-grid {
+      position: absolute;
+      inset: -100%;
+      background-image:
+        linear-gradient(to right, rgba(0, 242, 254, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(124, 58, 237, 0.06) 1px, transparent 1px);
+      background-size: 46px 46px;
+      animation: gridDrift 26s linear infinite;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(85px);
+      opacity: 0.45;
+      animation: orbFloat 14s ease-in-out infinite alternate;
+    }
+
+    .orb-1 {
+      width: 360px;
+      height: 360px;
+      background: #7c3aed;
+      top: -90px;
+      left: -80px;
+    }
+
+    .orb-2 {
+      width: 340px;
+      height: 340px;
+      background: #00f2fe;
+      bottom: -100px;
+      right: -70px;
+      animation-delay: -5s;
+    }
+
+    .orb-3 {
+      width: 240px;
+      height: 240px;
+      background: #ec4899;
+      top: 42%;
+      left: 55%;
+      opacity: 0.25;
+      animation-duration: 18s;
+    }
+
+    @keyframes gridDrift {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(46px, 46px, 0); }
+    }
+
+    @keyframes orbFloat {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(35px, -28px) scale(1.08); }
+      100% { transform: translate(-25px, 24px) scale(0.96); }
+    }
+
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.985);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(0, 242, 254, 0.35); }
+      50% { box-shadow: 0 0 18px 2px rgba(0, 242, 254, 0.22); }
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: translateY(8px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      animation: fadeSlideUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 22px;
+      border-radius: 18px;
+      background: var(--card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      margin-bottom: 24px;
+      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.42);
+      animation: pulseGlow 4s ease-in-out infinite;
+    }
+
+    .brand {
+      font-size: 1.35rem;
+      font-weight: 900;
+      letter-spacing: 0.6px;
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(90deg, #ffffff, #a78bfa, var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: transform 0.25s ease;
+    }
+
+    .brand:hover { transform: scale(1.03); }
+
+    .badge {
+      -webkit-text-fill-color: initial;
+      font-size: 0.74rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.14);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.6);
+      font-weight: 700;
+    }
+
+    .badge.admin {
+      background: rgba(0, 242, 254, 0.15);
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    button, input, textarea {
+      background: rgba(8, 12, 26, 0.88);
+      color: var(--text);
+      border: 1px solid rgba(148, 163, 184, 0.24);
+      border-radius: 11px;
+      padding: 10px 13px;
+      font-size: 0.92rem;
+      outline: none;
+      transition: transform 0.2s ease, border-color 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
+    }
+
+    input:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    button {
+      cursor: pointer;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+      box-shadow: 0 6px 18px rgba(0, 242, 254, 0.18);
+    }
+
+    button:active { transform: translateY(0) scale(0.98); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      border: none;
+      color: #fff;
+      box-shadow: 0 6px 20px rgba(124, 58, 237, 0.35);
+    }
+
+    .link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 14px;
+      border-radius: 11px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-decoration: none;
+      color: #fff;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+    }
+
+    .link-btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.08);
+    }
+
+    .btn-discord {
+      background: linear-gradient(135deg, #5865f2, #434ec4);
+      box-shadow: 0 6px 18px rgba(88, 101, 242, 0.35);
+    }
+
+    .btn-yt {
+      background: linear-gradient(135deg, #ff0000, #c40000);
+      box-shadow: 0 6px 18px rgba(255, 0, 0, 0.32);
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.16);
+      color: #fca5a5;
+      border-color: rgba(239, 68, 68, 0.45);
+      padding: 6px 10px;
+      font-size: 0.78rem;
+    }
+
+    .btn-danger:hover {
+      background: var(--danger);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(239, 68, 68, 0.35);
+    }
+
+    .admin-panel {
+      display: none;
+      background: var(--card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--accent);
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 12px 30px rgba(0, 242, 254, 0.12);
+    }
+
+    .admin-panel.open {
+      display: block;
+      animation: popIn 0.35s ease both;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .form-grid textarea {
+      grid-column: 1 / -1;
+      min-height: 75px;
+      resize: vertical;
+    }
+
+    .videos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(345px, 1fr));
+      gap: 22px;
+    }
+
+    .video-card {
+      background: var(--card);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.42);
+      opacity: 0;
+      animation: fadeSlideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
+    }
+
+    .video-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--accent);
+      box-shadow: 0 18px 38px rgba(0, 242, 254, 0.16);
+    }
+
+    .player-box {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+      background: #000;
+      overflow: hidden;
+    }
+
+    .player-box iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .video-body { padding: 16px; }
+    .video-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+    .video-title { font-size: 1.06rem; font-weight: 800; color: #fff; }
+    .video-desc { color: var(--muted); font-size: 0.88rem; margin-top: 6px; white-space: pre-wrap; }
+
+    /* COMMENT SECTION PER VIDEO */
+    .comments-box {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(148, 163, 184, 0.18);
+    }
+
+    .comments-heading {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .profile-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+    .comment-form { display: flex; gap: 8px; margin-bottom: 12px; }
+    .comment-form input { flex: 1; }
+
+    .comments-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 260px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .comment-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      background: rgba(6, 9, 20, 0.78);
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      border-radius: 12px;
+      padding: 10px;
+      animation: popIn 0.28s ease both;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .comment-item:hover {
+      border-color: rgba(0, 242, 254, 0.35);
+      transform: translateX(2px);
+    }
+
+    .dp-img {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 1.5px solid var(--accent);
+      background: #1e1b4b;
+    }
+
+    .dp-fallback {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 0.9rem;
+      background: linear-gradient(135deg, #7c3aed, #00f2fe);
+      color: #05070f;
+    }
+
+    .comment-main { flex: 1; min-width: 0; }
+    .comment-meta { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .comment-author { font-size: 0.86rem; font-weight: 800; color: #fff; }
+    .comment-time { font-size: 0.72rem; color: var(--muted); }
+    .comment-text { font-size: 0.88rem; color: #e2e8f0; margin-top: 3px; word-break: break-word; }
+
+    /* MODAL */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 16px;
+    }
+
+    .modal.open {
+      display: flex;
+      animation: popIn 0.25s ease both;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 410px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+    }
+
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 44px 18px;
+      background: var(--card);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      animation: popIn 0.35s ease both;
+    }
+
+    footer {
+      margin-top: 36px;
+      padding: 18px 20px;
+      border-radius: 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    @media (max-width: 600px) {
+      .profile-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-stage" aria-hidden="true">
+    <div class="bg-grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <div class="wrap">
+    <header>
+      <div class="brand" id="logoBtn" title="5 clicks or Ctrl+Shift+L for Admin">
+        <span>VEDA HUB</span>
+        <span class="badge" id="roleBadge">Viewer Mode</span>
+      </div>
+      <div class="actions">
+        <input type="search" id="searchInput" placeholder="Search videos..." />
+        <a class="link-btn btn-discord" href="https://discord.gg/Qrr8HNWqN" target="_blank" rel="noopener noreferrer">Discord</a>
+        <a class="link-btn btn-yt" href="https://www.youtube.com/@vedanshsrivastava182" target="_blank" rel="noopener noreferrer">YouTube</a>
+        <button id="adminLoginBtn" style="display:none;">Admin Login</button>
+        <button id="adminLogoutBtn" style="display:none;">Logout</button>
+      </div>
+    </header>
+
+    <!-- ADMIN ADD VIDEO PANEL -->
+    <section class="admin-panel" id="adminPanel">
+      <h3>Add New Video (Admin Only)</h3>
+      <form id="addVideoForm">
+        <div class="form-grid">
+          <input type="text" id="vidTitle" placeholder="Video Title *" required />
+          <input type="text" id="vidUrlOrId" placeholder="YouTube URL or 11-char ID *" required />
+          <textarea id="vidDesc" placeholder="Description (optional)"></textarea>
+        </div>
+        <div style="margin-top: 12px; display: flex; gap: 10px;">
+          <button type="submit" class="btn-primary">Publish Video</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- VIDEOS LIST -->
+    <main class="videos-grid" id="videosGrid"></main>
+    <div class="empty" id="emptyState" style="display:none;">Abhi koi video publish nahi hua hai.</div>
+
+    <footer>
+      <span>VEDA HUB</span>
+      <div class="actions">
+        <a class="link-btn btn-discord" href="https://discord.gg/Qrr8HNWqN" target="_blank" rel="noopener noreferrer">Join Discord</a>
+        <a class="link-btn btn-yt" href="https://www.youtube.com/@vedanshsrivastava182" target="_blank" rel="noopener noreferrer">Visit YouTube</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ADMIN LOGIN MODAL -->
+  <div class="modal" id="loginModal">
+    <div class="modal-card">
+      <h3>Admin Sign In</h3>
+      <form id="loginForm" style="display:flex; flex-direction:column; gap:10px;">
+        <input type="email" id="adminEmail" placeholder="Admin Email" required />
+        <input type="password" id="adminPassword" placeholder="Password" required />
+        <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:6px;">
+          <button type="button" id="closeLoginBtn">Cancel</button>
+          <button type="submit" class="btn-primary">Login</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import {
+      getFirestore, collection, doc, addDoc, deleteDoc,
+      onSnapshot, query, orderBy, serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const ADMIN_UID = "dWCG8hK7BUTD1hcvk3NVqSg7pJA2";
+
+    // Apna Firebase Web Config yahan rakhein
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "website-3370c.firebaseapp.com",
+      projectId: "website-3370c",
+      storageBucket: "website-3370c.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let isAdmin = false;
+    let allVideos = [];
+    const commentUnsubs = new Map();
+
+    const PROFILE_KEY = "vh_viewer_profile_v1";
+    function getViewerProfile() {
+      try {
+        return JSON.parse(localStorage.getItem(PROFILE_KEY)) || { name: "", dp: "" };
+      } catch {
+        return { name: "", dp: "" };
+      }
+    }
+    function saveViewerProfile(name, dp) {
+      localStorage.setItem(PROFILE_KEY, JSON.stringify({ name: name.trim(), dp: dp.trim() }));
+      document.querySelectorAll(".viewer-name-input").forEach((el) => { if (el.value !== name) el.value = name; });
+      document.querySelectorAll(".viewer-dp-input").forEach((el) => { if (el.value !== dp) el.value = dp; });
+    }
+
+    let logoClicks = 0;
+    let clickTimer = null;
+    const logoBtn = document.getElementById("logoBtn");
+    const loginModal = document.getElementById("loginModal");
+
+    function openLoginModal() {
+      if (!isAdmin) loginModal.classList.add("open");
+    }
+
+    logoBtn.addEventListener("click", () => {
+      logoClicks++;
+      clearTimeout(clickTimer);
+      clickTimer = setTimeout(() => { logoClicks = 0; }, 1400);
+      if (logoClicks >= 5) {
+        logoClicks = 0;
+        openLoginModal();
+      }
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "l") {
+        e.preventDefault();
+        openLoginModal();
+      }
+    });
+
+    document.getElementById("closeLoginBtn").addEventListener("click", () => {
+      loginModal.classList.remove("open");
+    });
+
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("adminEmail").value.trim();
+      const pass = document.getElementById("adminPassword").value;
+      try {
+        await signInWithEmailAndPassword(auth, email, pass);
+        loginModal.classList.remove("open");
+        document.getElementById("loginForm").reset();
+      } catch (err) {
+        alert("Login failed: " + err.message);
+      }
+    });
+
+    document.getElementById("adminLogoutBtn").addEventListener("click", async () => {
+      await signOut(auth);
+    });
+
+    onAuthStateChanged(auth, (user) => {
+      isAdmin = Boolean(user && user.uid === ADMIN_UID);
+      const badge = document.getElementById("roleBadge");
+      const panel = document.getElementById("adminPanel");
+      const logoutBtn = document.getElementById("adminLogoutBtn");
+
+      if (isAdmin) {
+        badge.textContent = "Admin Mode";
+        badge.classList.add("admin");
+        panel.classList.add("open");
+        logoutBtn.style.display = "inline-block";
+      } else {
+        badge.textContent = "Viewer Mode";
+        badge.classList.remove("admin");
+        panel.classList.remove("open");
+        logoutBtn.style.display = "none";
+      }
+      renderVideos();
+    });
+
+    function extractYouTubeId(input) {
+      const clean = (input || "").trim();
+      if (/^[a-zA-Z0-9_-]{11}$/.test(clean)) return clean;
+      const patterns = [
+        /(?:youtube\.com\/watch\?v=|youtube\.com\/embed\/|youtube\.com\/v\/|youtube\.com\/shorts\/|youtube\.com\/live\/)([a-zA-Z0-9_-]{11})/,
+        /youtu\.be\/([a-zA-Z0-9_-]{11})/,
+        /[?&]v=([a-zA-Z0-9_-]{11})/
+      ];
+      for (const re of patterns) {
+        const m = clean.match(re);
+        if (m && m[1]) return m[1];
+      }
+      return null;
+    }
+
+    function isSafeImageUrl(url) {
+      try {
+        const u = new URL(url);
+        return u.protocol === "https:" || u.protocol === "http:";
+      } catch {
+        return false;
+      }
+    }
+
+    function formatTime(ts) {
+      if (!ts || !ts.toDate) return "Just now";
+      return ts.toDate().toLocaleString([], { dateStyle: "short", timeStyle: "short" });
+    }
+
+    document.getElementById("addVideoForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!isAdmin) return alert("Sirf Admin video add kar sakta hai.");
+
+      const title = document.getElementById("vidTitle").value.trim();
+      const rawUrl = document.getElementById("vidUrlOrId").value.trim();
+      const desc = document.getElementById("vidDesc").value.trim();
+      const ytId = extractYouTubeId(rawUrl);
+
+      if (!ytId) return alert("Valid YouTube link ya 11-character Video ID daalein.");
+
+      try {
+        await addDoc(collection(db, "public_videos"), {
+          title,
+          ytId,
+          description: desc,
+          createdAt: serverTimestamp()
+        });
+        e.target.reset();
+      } catch (err) {
+        alert("Video add error: " + err.message);
+      }
+    });
+
+    function clearCommentListeners() {
+      for (const unsub of commentUnsubs.values()) unsub();
+      commentUnsubs.clear();
+    }
+
+    function subscribeComments(videoId, listEl, countEl) {
+      if (commentUnsubs.has(videoId)) {
+        commentUnsubs.get(videoId)();
+        commentUnsubs.delete(videoId);
+      }
+      const q = query(collection(db, "public_videos", videoId, "comments"), orderBy("createdAt", "desc"));
+      const unsub = onSnapshot(q, (snap) => {
+        countEl.textContent = `Comments (${snap.size})`;
+        listEl.innerHTML = "";
+        if (snap.empty) {
+          listEl.innerHTML = `<div style="color:var(--muted); font-size:0.84rem;">Abhi koi comment nahi hai. Pehla comment karein!</div>`;
+          return;
+        }
+        snap.forEach((docSnap) => {
+          const c = docSnap.data();
+          const item = document.createElement("div");
+          item.className = "comment-item";
+
+          const name = (c.authorName || "Anonymous").trim();
+          const initial = name.charAt(0).toUpperCase() || "?";
+
+          if (c.authorDp && isSafeImageUrl(c.authorDp)) {
+            const img = document.createElement("img");
+            img.className = "dp-img";
+            img.src = c.authorDp;
+            img.alt = name;
+            img.onerror = () => {
+              const fb = document.createElement("div");
+              fb.className = "dp-fallback";
+              fb.textContent = initial;
+              img.replaceWith(fb);
+            };
+            item.appendChild(img);
+          } else {
+            const fb = document.createElement("div");
+            fb.className = "dp-fallback";
+            fb.textContent = initial;
+            item.appendChild(fb);
+          }
+
+          const main = document.createElement("div");
+          main.className = "comment-main";
+
+          const meta = document.createElement("div");
+          meta.className = "comment-meta";
+
+          const authorSpan = document.createElement("span");
+          authorSpan.className = "comment-author";
+          authorSpan.textContent = name;
+
+          const rightMeta = document.createElement("div");
+          rightMeta.style.display = "flex";
+          rightMeta.style.alignItems = "center";
+          rightMeta.style.gap = "8px";
+
+          const timeSpan = document.createElement("span");
+          timeSpan.className = "comment-time";
+          timeSpan.textContent = formatTime(c.createdAt);
+          rightMeta.appendChild(timeSpan);
+
+          if (isAdmin) {
+            const delBtn = document.createElement("button");
+            delBtn.type = "button";
+            delBtn.className = "btn-danger";
+            delBtn.textContent = "Delete";
+            delBtn.addEventListener("click", async () => {
+              try {
+                await deleteDoc(doc(db, "public_videos", videoId, "comments", docSnap.id));
+              } catch (err) {
+                alert("Comment delete error: " + err.message);
+              }
+            });
+            rightMeta.appendChild(delBtn);
+          }
+
+          meta.appendChild(authorSpan);
+          meta.appendChild(rightMeta);
+
+          const textDiv = document.createElement("div");
+          textDiv.className = "comment-text";
+          textDiv.textContent = c.text || "";
+
+          main.appendChild(meta);
+          main.appendChild(textDiv);
+          item.appendChild(main);
+          listEl.appendChild(item);
+        });
+      });
+      commentUnsubs.set(videoId, unsub);
+    }
+
+    function renderVideos() {
+      clearCommentListeners();
+      const term = document.getElementById("searchInput").value.trim().toLowerCase();
+      const filtered = allVideos.filter((v) =>
+        (v.title || "").toLowerCase().includes(term) || (v.description || "").toLowerCase().includes(term)
+      );
+
+      const grid = document.getElementById("videosGrid");
+      const empty = document.getElementById("emptyState");
+      grid.innerHTML = "";
+
+      if (!filtered.length) {
+        empty.style.display = "block";
+        return;
+      }
+      empty.style.display = "none";
+
+      const profile = getViewerProfile();
+
+      filtered.forEach((v, idx) => {
+        const card = document.createElement("article");
+        card.className = "video-card";
+        card.style.animationDelay = `${Math.min(idx * 70, 420)}ms`;
+
+        const playerBox = document.createElement("div");
+        playerBox.className = "player-box";
+        const iframe = document.createElement("iframe");
+        iframe.src = `https://www.youtube.com/embed/${encodeURIComponent(v.ytId)}?rel=0`;
+        iframe.title = v.title || "Video";
+        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+        iframe.allowFullscreen = true;
+        playerBox.appendChild(iframe);
+        card.appendChild(playerBox);
+
+        const body = document.createElement("div");
+        body.className = "video-body";
+
+        const top = document.createElement("div");
+        top.className = "video-top";
+        const titleEl = document.createElement("h3");
+        titleEl.className = "video-title";
+        titleEl.textContent = v.title || "Untitled Video";
+        top.appendChild(titleEl);
+
+        if (isAdmin) {
+          const delVidBtn = document.createElement("button");
+          delVidBtn.type = "button";
+          delVidBtn.className = "btn-danger";
+          delVidBtn.textContent = "Delete Video";
+          delVidBtn.addEventListener("click", async () => {
+            if (!confirm("Is video ko delete karna hai?")) return;
+            try {
+              await deleteDoc(doc(db, "public_videos", v.id));
+            } catch (err) {
+              alert("Video delete error: " + err.message);
+            }
+          });
+          top.appendChild(delVidBtn);
+        }
+
+        body.appendChild(top);
+
+        if (v.description) {
+          const descEl = document.createElement("p");
+          descEl.className = "video-desc";
+          descEl.textContent = v.description;
+          body.appendChild(descEl);
+        }
+
+        const cBox = document.createElement("div");
+        cBox.className = "comments-box";
+
+        const cHead = document.createElement("div");
+        cHead.className = "comments-heading";
+        cHead.textContent = "Comments (0)";
+        cBox.appendChild(cHead);
+
+        const pRow = document.createElement("div");
+        pRow.className = "profile-row";
+
+        const nameInput = document.createElement("input");
+        nameInput.type = "text";
+        nameInput.className = "viewer-name-input";
+        nameInput.placeholder = "Apna Name *";
+        nameInput.maxLength = 40;
+        nameInput.value = profile.name;
+
+        const dpInput = document.createElement("input");
+        dpInput.type = "url";
+        dpInput.className = "viewer-dp-input";
+        dpInput.placeholder = "DP Image URL (optional)";
+        dpInput.value = profile.dp;
+
+        nameInput.addEventListener("input", () => saveViewerProfile(nameInput.value, dpInput.value));
+        dpInput.addEventListener("input", () => saveViewerProfile(nameInput.value, dpInput.value));
+
+        pRow.appendChild(nameInput);
+        pRow.appendChild(dpInput);
+        cBox.appendChild(pRow);
+
+        const cForm = document.createElement("form");
+        cForm.className = "comment-form";
+
+        const cInput = document.createElement("input");
+        cInput.type = "text";
+        cInput.placeholder = "Comment likhein...";
+        cInput.maxLength = 600;
+        cInput.required = true;
+
+        const cBtn = document.createElement("button");
+        cBtn.type = "submit";
+        cBtn.className = "btn-primary";
+        cBtn.textContent = "Post";
+
+        cForm.appendChild(cInput);
+        cForm.appendChild(cBtn);
+
+        const cList = document.createElement("div");
+        cList.className = "comments-list";
+
+        cForm.addEventListener("submit", async (ev) => {
+          ev.preventDefault();
+          const authorName = nameInput.value.trim();
+          const authorDp = dpInput.value.trim();
+          const text = cInput.value.trim();
+
+          if (!authorName) return alert("Pehle apna Name likhein.");
+          if (!text) return;
+          if (authorDp && !isSafeImageUrl(authorDp)) {
+            return alert("DP ke liye valid http/https image link daalein ya khali chhod dein.");
+          }
+
+          saveViewerProfile(authorName, authorDp);
+          cBtn.disabled = true;
+          try {
+            await addDoc(collection(db, "public_videos", v.id, "comments"), {
+              authorName,
+              authorDp: authorDp || "",
+              text,
+              createdAt: serverTimestamp()
+            });
+            cInput.value = "";
+          } catch (err) {
+            alert("Comment post error: " + err.message);
+          } finally {
+            cBtn.disabled = false;
+          }
+        });
+
+        cBox.appendChild(cForm);
+        cBox.appendChild(cList);
+        body.appendChild(cBox);
+        card.appendChild(body);
+        grid.appendChild(card);
+
+        subscribeComments(v.id, cList, cHead);
+      });
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderVideos);
+
+    const videosQuery = query(collection(db, "public_videos"), orderBy("createdAt", "desc"));
+    onSnapshot(videosQuery, (snap) => {
+      allVideos = [];
+      snap.forEach((d) => allVideos.push({ id: d.id, ...d.data() }));
+      renderVideos();
+    });
+  </script>
+</body>
+</html>
